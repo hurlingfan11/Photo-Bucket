@@ -42,11 +42,10 @@ public class MainActivity extends AppCompatActivity {
         PhotoBucketAdapter photoBucketAdapter = new PhotoBucketAdapter();
         recyclerView.setAdapter(photoBucketAdapter);
 
+        //final FirebaseFirestore dbPhotoBucket = FirebaseFirestore.getInstance();
 
-
-        final FirebaseFirestore dbPhotoBucket = FirebaseFirestore.getInstance();
-
-        dbPhotoBucket.collection("photobuckets")
+        /*dbPhotoBucket.collection("photobuckets")
+                // .get gets once
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                             Log.w(Constants.TAG, "Error getting documents.", task.getException());
                         }
                     }
-                });
+                });*/
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view)
             {
 
-                //Create a new mq with a first and lastname
+              /*  //Create a new mq with a first and lastname
                 Map<String,Object> mq =new HashMap<>();
                 mTempCounter = mTempCounter + 100;
                 mq.put(Constants.KEY_CAPTION, "Caption#" +mTempCounter);
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                                 Log.w(Constants.TAG, "Error adding document", e);
                             }
-                        });
+                        });*/
 
 
         }

@@ -23,20 +23,24 @@ import java.util.List;
 
 public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.PhotoBucketViewHolder> {
 
+    //Firebase set up, make an array of Document
     private List<DocumentSnapshot> mPhotoBucketSnapShots = new ArrayList<>();
 
     public PhotoBucketAdapter(){
-
+        // Runs once as the adapter is made
         CollectionReference pbRef = FirebaseFirestore.getInstance().collection(Constants.COLLECTION_PATH);
-        pbRef.orderBy(Constants.KEY_CREATED, Query.Direction.DESCENDING).limit(50).addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+        // Adds snapshotlistener  which receives documentsnapshots and an exception
+        //pbRef.orderBy(Constants.KEY_CREATED, Query.Direction.DESCENDING).limit(50).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        pbRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+            public void onEvent(QuerySnapshot DocumentSnapshots, FirebaseFirestoreException e) {
                 if(e!=null){
                     Log.w(Constants.TAG, "Listening Failed");
                     return;
                 }
-
-                mPhotoBucketSnapShots = queryDocumentSnapshots.getDocuments();
+                // Need to set our array to get documents which is a list
+                mPhotoBucketSnapShots = DocumentSnapshots.getDocuments();
                 notifyDataSetChanged();// Whenever it changes will notify the adapater
 
             }
@@ -53,9 +57,14 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull PhotoBucketViewHolder photoBucketViewHolder, int i) {
-        DocumentSnapshot ds = mPhotoBucketSnapShots .get(i);
+        DocumentSnapshot ds = mPhotoBucketSnapShots.get(i);
+        // Get() returns a generic object so we need to cast it to Strings as we know that is what they are
+        // Get the caption
         String caption = (String) ds.get(Constants.KEY_CAPTION);
+        // Get the Image URL
         String imageurl = (String) ds.get(Constants.KEY_IMAGE_URL);
+
+        // want to set the two texts
         photoBucketViewHolder.mCaptionTextView.setText(caption);
         photoBucketViewHolder.mImageURLTextView.setText(imageurl);
 

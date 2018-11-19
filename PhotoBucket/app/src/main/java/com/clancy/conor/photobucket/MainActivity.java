@@ -1,16 +1,31 @@
 package com.clancy.conor.photobucket;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class MainActivity extends AppCompatActivity {
 
+    private int mTempCounter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,13 +33,51 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        final FirebaseFirestore dbPhotoBucket = FirebaseFirestore.getInstance();
+
+        dbPhotoBucket.collection("photobuckets")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(Constants.TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.w(Constants.TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
+            public void onClick(View view)
+            {
+
+                //Create a new mq with a first and lastname
+                Map<String,Object> mq =new HashMap<>();
+                mTempCounter = mTempCounter + 100;
+                mq.put(Constants.KEY_CAPTION, "Caption#" +mTempCounter);
+                mq.put(Constants.KEY_IMAGE_URL, "ImageURL#" +mTempCounter);
+
+                dbPhotoBucket.collection(Constants.COLLECTION_PATH).add(mq)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(Constants.TAG,"DocumentSnapshot added with ID: " + mTempCounter);
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(Constants.TAG, "Error adding document", e);
+                            }
+                        });
+
+
+        }
         });
     }
 

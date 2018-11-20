@@ -14,7 +14,7 @@
         android:id="@+id/detail_image_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/detail_text_view_caption"
+        android:layout_below="@+id/detail_text_view_caption"
         android:layout_centerHorizontal="true"
         android:layout_margin="4dp"
 

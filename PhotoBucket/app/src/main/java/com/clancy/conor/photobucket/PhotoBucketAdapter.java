@@ -66,7 +66,7 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
 
         // want to set the two texts
         photoBucketViewHolder.mCaptionTextView.setText(caption);
-        photoBucketViewHolder.mImageURLTextView.setText(imageurl);
+        //photoBucketViewHolder.mImageURLTextView.setText(imageurl);
 
     }
 
@@ -79,7 +79,7 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
     class PhotoBucketViewHolder extends RecyclerView.ViewHolder{
 
         private TextView mCaptionTextView;
-        private TextView mImageURLTextView;
+        //private TextView mImageURLTextView;
 
         //Default Constructor
         public PhotoBucketViewHolder(@NonNull View itemView) {
@@ -87,7 +87,7 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
 
             // only looking inside itemview
             mCaptionTextView = itemView.findViewById(R.id.itemview_caption);
-            mImageURLTextView = itemView.findViewById(R.id.itemview_imageurl);
+            //mImageURLTextView = itemView.findViewById(R.id.itemview_imageurl);
 
             // when someone selects an itemview, take an action
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +100,8 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
                     // to start an activity need an intent, so make an intent
 
                     Intent intent = new Intent(c, PhotoBucketDetailActivity.class);
-
-                    //intent.putExtra(Constants.EXTRA_DOC_ID, ds.getId());
+                    // We need to pass data in one direction, so use doc_id
+                    intent.putExtra(Constants.EXTRA_DOC_ID, ds.getId());
                     // starts the activity
                    c.startActivity(intent);
 

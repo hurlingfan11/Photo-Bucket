@@ -1,10 +1,12 @@
 package com.clancy.conor.photobucket;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +27,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PhotoBucketDetailActivity extends AppCompatActivity {
     private ImageView mPhotoBucketImageView;
@@ -65,7 +70,7 @@ public class PhotoBucketDetailActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     mDocSnapShot = documentSnapshot; //Save document snapshot so can use it in other places as well
                     mPhotoBucketTextView.setText((String) documentSnapshot.get(Constants.KEY_CAPTION));
-                    Ion.with(mPhotoBucketImageView).load((String)documentSnapshot.get(Constants.KEY_IMAGE_URL));
+                    Ion.with(mPhotoBucketImageView).load((String) documentSnapshot.get(Constants.KEY_IMAGE_URL));
                     //mPhotoBucketImageView.setImageResource((String)documentSnapshot.get(Constants.KEY_MOVIE));
                 }
             }
@@ -76,6 +81,7 @@ public class PhotoBucketDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showEditDialog();
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
@@ -84,16 +90,14 @@ public class PhotoBucketDetailActivity extends AppCompatActivity {
         });
     }
 
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
 
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -110,27 +114,38 @@ public class PhotoBucketDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public boolean loadImageFromURL(String fileUrl,
-                                    ImageView iv){
-        try {
+    private void showEditDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-            URL myFileUrl = new URL (fileUrl);
-            HttpURLConnection conn =
-                    (HttpURLConnection) myFileUrl.openConnection();
-            conn.setDoInput(true);
-            conn.connect();
+        View view = getLayoutInflater().inflate(R.layout.photobucket_dialog, null, false);
+        builder.setView(view);
 
-            InputStream is = conn.getInputStream();
-            iv.setImageBitmap(BitmapFactory.decodeStream(is));
+        final TextView cEditText = view.findViewById(R.id.dialog_caption_edittext);
+        final TextView iEditText = view.findViewById(R.id.dialog_imageurl_edittext);
 
-            return true;
+        cEditText.setText((String) mDocSnapShot.get(Constants.KEY_CAPTION));
+        iEditText.setText((String) mDocSnapShot.get(Constants.KEY_IMAGE_URL));
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        builder.setTitle("Edit this caption/photo?");
 
-        return false;
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                Map<String, Object> mq = new HashMap<>();
+
+                mq.put(Constants.KEY_CAPTION, cEditText.getText().toString());
+                mq.put(Constants.KEY_IMAGE_URL, iEditText.getText().toString());
+                mq.put(Constants.KEY_CREATED, new Date());
+
+                mDocRef.update(mq);
+
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, null);
+
+        builder.create().show();
+
     }
 }

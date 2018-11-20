@@ -89,20 +89,24 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
             mCaptionTextView = itemView.findViewById(R.id.itemview_caption);
             mImageURLTextView = itemView.findViewById(R.id.itemview_imageurl);
 
-
-            /*itemView.setOnClickListener(new View.OnClickListener() {
+            // when someone selects an itemview, take an action
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                // Want to start an activity, to start an activity, need the context
                     DocumentSnapshot ds = mPhotoBucketSnapShots.get(getAdapterPosition());
                     Context c = v.getContext();
+                    // to start an activity need an intent, so make an intent
+
                     Intent intent = new Intent(c, PhotoBucketDetailActivity.class);
 
-                    intent.putExtra(Constants.EXTRA_DOC_ID, ds.getId());
-
+                    //intent.putExtra(Constants.EXTRA_DOC_ID, ds.getId());
+                    // starts the activity
                    c.startActivity(intent);
 
                 }
-            });*/
+            });
         }
     }
 

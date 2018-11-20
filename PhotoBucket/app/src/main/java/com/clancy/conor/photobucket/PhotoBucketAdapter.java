@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -51,7 +50,8 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
     @NonNull
     @Override
     public PhotoBucketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photobucket_itemview, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.photobucket_itemview, parent,
+                false);
         return new PhotoBucketViewHolder(itemView);
     }
 
@@ -89,19 +89,20 @@ public class PhotoBucketAdapter extends RecyclerView.Adapter<PhotoBucketAdapter.
             mCaptionTextView = itemView.findViewById(R.id.itemview_caption);
             mImageURLTextView = itemView.findViewById(R.id.itemview_imageurl);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+
+            /*itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DocumentSnapshot ds = mPhotoBucketSnapShots.get(getAdapterPosition());
                     Context c = v.getContext();
-                    //Intent intent = new Intent(c, PhotoBucketDetailActivity.class);
+                    Intent intent = new Intent(c, PhotoBucketDetailActivity.class);
 
-                    //intent.putExtra(Constants.EXTRA_DOC_ID, ds.getId());
+                    intent.putExtra(Constants.EXTRA_DOC_ID, ds.getId());
 
-                   // c.startActivity(intent);
+                   c.startActivity(intent);
 
                 }
-            });
+            });*/
         }
     }
 

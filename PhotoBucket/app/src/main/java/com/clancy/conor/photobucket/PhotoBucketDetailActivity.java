@@ -102,6 +102,8 @@ public class PhotoBucketDetailActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
+            mDocRef.delete();
+            finish();
             return true;
         }
 
